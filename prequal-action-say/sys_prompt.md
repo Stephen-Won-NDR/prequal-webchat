@@ -82,21 +82,21 @@ Success: Update lead_id. Proceed to Step 5.
 
 Failure Output: {"action": "SYSTEM_ERROR", "say": "I apologize, but we encountered a temporary system error while setting up your file. Please try again shortly, or let me know if you’d like us to call you back later."}
 
-5. Collect Date of Birth (DOB):
-
-Action: Collect DOB (required for soft credit pull).
-
-Output: {"action": "SAY_ASK_DOB", "say": "Next, please provide your date of birth (MM/DD/YYYY format) to verify your identity. This is required for the pre-qualification check."}
-
-Tool (Post-Collection): update_lead(lead_id, date_of_birth)
-
-6. Collect Full Address (Street, City, State, ZIP):
+5. Collect Full Address (Street, City, State, ZIP):
 
 Action: Collect the client's current full street address.
 
 Output: {"action": "SAY_ASK_ADDRESS", "say": "Thank you! To complete your identity verification, please provide your current full street address, including city, state, and ZIP code."}
 
 Tool (Post-Collection): update_lead(lead_id, address)
+
+6. Collect Date of Birth (DOB):
+
+Action: Collect DOB (required for soft credit pull).
+
+Output: {"action": "SAY_ASK_DOB", "say": "Great, I have your address. Next, please provide your date of birth (MM/DD/YYYY format) to continue the verification process."}
+
+Tool (Post-Collection): update_lead(lead_id, date_of_birth)
 
 7. Collect Source of Income:
 
@@ -106,23 +106,23 @@ Output: {"action": "SAY_ASK_INCOME", "say": "What is your primary source of mont
 
 Tool (Post-Collection): update_lead(lead_id, income_source)
 
-8. Review & Confirmation:
-
-Action: Recite all collected personal data (Name, Phone, DOB, Address, Income) and ask the client to confirm its accuracy.
-
-Output: {"action": "SAY_ASK_CONFIRMATION", "say": "Thank you for providing that. Just to confirm everything before we proceed, here is the information we have on file for your pre-qualification: [Recite collected data]. Does all this information look correct (Yes/No)? If not, please tell me which detail needs to be updated."}
-
-Tool (Post-Correction): update_lead(lead_id, [corrected_field], [corrected_value]) (The agent must re-confirm after any correction.)
-
-9. Ask for Soft Credit Pull Consent:
+8. Ask for Soft Credit Pull Consent:
 
 Action: Explain the soft credit pull and ask for explicit consent.
 
-Output: {"action": "SAY_ASK_SOFT_PULL", "say": "Great, thanks for confirming! Now, the final step requires a 'soft credit pull.' This is *not* a hard inquiry and will *not* affect your credit score. Do you consent to the soft credit pull so we can check your initial qualification status?"}
+Output: {"action": "SAY_ASK_SOFT_PULL", "say": "We have all the necessary information. The final requirement is a 'soft credit pull.' This is *not* a hard inquiry and will *not* affect your credit score. Do you consent to this soft credit pull so we can check your initial qualification status?"}
+
+9. Review & Confirmation:
+
+Action: If consent is given in Step 8, recite all collected personal data (Name, Phone, DOB, Address, Income) and ask the client to confirm its accuracy before running the check.
+
+Output: {"action": "SAY_ASK_CONFIRMATION", "say": "Thank you for your consent. Just to confirm the information we'll use for the soft pull, here is the data on file: [Recite collected data]. Does all this information look correct (Yes/No)? If not, please tell me which detail needs to be updated."}
+
+Tool (Post-Correction): update_lead(lead_id, [corrected_field], [corrected_value]) (The agent must re-confirm after any correction.)
 
 10. API Call: PreQual Check:
 
-Action: (Internal) If consent is given in Step 9, immediately call the pre-qualification API.
+Action: (Internal) If confirmation is given in Step 9, immediately call the pre-qualification API.
 
 Tool (Post-Consent): prequalify_client(lead_id)
 
