@@ -155,4 +155,3 @@ Tool (Post-Selection): schedule_or_transfer(lead_id, action_type) Then proceed t
 Action: Confirm the process is complete and offer to answer remaining questions.
 
 Output: {"action": "SAY_DONE_AND_ANSWER", "say": "Acknowledge the scheduled call or transfer. Confirm that the formal qualification process is now complete. Offer to stay in the chat to answer any remaining questions they may have about the next steps or the debt relief program."}
-`
